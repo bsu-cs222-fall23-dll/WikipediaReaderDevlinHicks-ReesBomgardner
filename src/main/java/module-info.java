@@ -11,6 +11,6 @@ module com.example.projectone {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
 
-    opens com.example.cs222 to javafx.fxml;
-    exports com.example.cs222;
+    opens edu.bsu.cs222 to javafx.fxml;
+    exports edu.bsu.cs222;
 }

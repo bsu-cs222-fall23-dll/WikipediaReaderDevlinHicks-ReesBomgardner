@@ -1,4 +1,4 @@
-package com.example.cs222;
+package edu.bsu.cs222;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
