@@ -13,7 +13,7 @@ public class PullfromWiki {
         printRawJson(jsonData);
     }
 
-    private static URLConnection connectToWikipedia() throws IOException {
+    public static URLConnection connectToWikipedia() throws IOException {
         String encodedUrlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" +
                 URLEncoder.encode("Zappa", Charset.defaultCharset()) +
                 "&rvprop=timestamp|user&rvlimit=4&redirects";
