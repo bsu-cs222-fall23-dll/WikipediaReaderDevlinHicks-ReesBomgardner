@@ -25,11 +25,11 @@ public class PullfromWiki {
         return connection;
     }
 
-    private static String readJsonAsStringFrom(URLConnection connection) throws IOException {
+    public static String readJsonAsStringFrom(URLConnection connection) throws IOException {
         return new String(connection.getInputStream().readAllBytes(), Charset.defaultCharset());
     }
 
-    private static void printRawJson(String jsonData) {
+    public static void printRawJson(String jsonData) {
         System.out.println(jsonData);
     }
 
