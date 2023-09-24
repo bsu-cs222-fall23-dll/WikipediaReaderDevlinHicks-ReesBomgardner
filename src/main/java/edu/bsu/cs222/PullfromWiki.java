@@ -7,6 +7,7 @@ import java.net.URLEncoder;
 import java.nio.charset.Charset;
 
 public class PullfromWiki {
+
     public static void main(String[] args) throws IOException {
         URLConnection connection = connectToWikipedia();
         String jsonData = readJsonAsStringFrom(connection);
