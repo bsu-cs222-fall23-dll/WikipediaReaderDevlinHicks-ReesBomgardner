@@ -1,39 +1,40 @@
 package edu.bsu.cs222;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
-import java.nio.charset.Charset;
-import java.util.Objects;
-import org.json.simple.JSONArray;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import java.io.IOException;
+import java.net.URLConnection;
 
 public class tests {
     @Test
     public void TestWikiConnection() throws IOException{
-        URLConnection connection=PullfromWiki.connectToWikipedia();
-        assertNotNull(connection);
+        String name="Frank Zappa";
+        URLConnection connect = PullfromWiki.connectToWikipedia(name);
+        Assertions.assertNotNull(connect);
     }
     @Test
-    public void TestJsonAccess() throws IOException{
-        String JsonData=readFileasString();
-        Assertions.assertNotNull(JsonData);
+    public void TestFileRead() throws IOException{
+        String jsonData = PullfromWiki.readFileAsString("scratch.json");
+        Assertions.assertNotNull(jsonData);
+    }
+    @Test
+    public JsonArray getRevisions(String JsonData){
+        JsonObject Object = JsonParser.parseString(JsonData).getAsJsonObject();
+        JsonObject query= Object.getAsJsonObject("query");
+        JsonObject pages=query.getAsJsonObject("pages");
+        JsonObject page = pages.entrySet().iterator().next().getValue().getAsJsonObject();
+        return page.getAsJsonArray("revisions");
+
     }
 
-    private String readFileasString() throws IOException,NullPointerException {
-        InputStream file=Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
-        return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
-    }
-    private JSONArray getRevisions(String JsonData){
-        return JsonData.read(JsonData,"$...revisions[*]");
-
-    }
+    @Test
     public void testRevisionCount() throws IOException{
-        String JsonData=readFileasString();
-        JSONArray revisions=getRevisions(JsonData);
+        String jsonData = PullfromWiki.readFileAsString("scratch.json");
+        JsonArray revisions=getRevisions(jsonData);
         Assertions.assertEquals(4, revisions.size());
 
     }

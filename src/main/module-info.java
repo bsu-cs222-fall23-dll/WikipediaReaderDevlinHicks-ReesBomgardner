@@ -10,7 +10,9 @@ module com.example.projectone {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
+    requires com.google.gson;
 
     opens edu.bsu.cs222 to javafx.fxml;
     exports edu.bsu.cs222;
+
 }
