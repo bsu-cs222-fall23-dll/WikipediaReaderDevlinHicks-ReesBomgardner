@@ -1,11 +1,17 @@
 package edu.bsu.cs222;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.net.URLConnection;
-
+import java.nio.charset.Charset;
+import java.util.Objects;
+import com.jayway.jsonpath.JsonPath;
+import net.minidev.json.JSONArray;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class tests {
@@ -15,12 +21,24 @@ public class tests {
         assertNotNull(connection);
     }
     @Test
-    public void TestJsonStream() throws IOException{
-        URL link=new URL("https://en.wikipedia.org/wiki/Led_Zeppelin");
-        URLConnection connect=link.openConnection();
-        String JsonData=PullfromWiki.readJsonAsStringFrom(connect);
-        assertNotNull(connect);
-        PullfromWiki.printRawJson(JsonData);
+    public void TestJsonAccess() throws IOException{
+        String JsonData=readFileasString();
+        Assertions.assertNotNull(JsonData);
+    }
+
+    private String readFileasString() throws IOException,NullPointerException {
+        InputStream file=Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
+        return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
+    }
+    private JSONArray getRevisions(String JsonData){
+        return JsonData.read(JsonData,"$...revisions[*]");
+
+    }
+    public void testRevisionCount() throws IOException{
+        String JsonData=readFileasString();
+        JSONArray revisions=getRevisions(JsonData);
+        Assertions.assertEquals(4, revisions.size());
+
     }
 
 
