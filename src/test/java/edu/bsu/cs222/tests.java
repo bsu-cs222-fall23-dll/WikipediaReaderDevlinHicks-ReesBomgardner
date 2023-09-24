@@ -2,16 +2,13 @@ package edu.bsu.cs222;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.Objects;
-import com.jayway.jsonpath.JsonPath;
-import net.minidev.json.JSONArray;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test
+import org.json.simple.JSONArray;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class tests {
