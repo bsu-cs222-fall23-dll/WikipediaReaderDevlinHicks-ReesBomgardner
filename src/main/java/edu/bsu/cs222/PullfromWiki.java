@@ -30,7 +30,6 @@ public class PullfromWiki {
             }
             if (articleExists(jsonData)) {
                 printChanges(jsonData);
-                System.exit(0);
             } else {
                 System.out.println("Article not found: " + articleTitle);
             }
