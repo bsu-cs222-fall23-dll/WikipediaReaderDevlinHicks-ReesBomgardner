@@ -1,4 +1,4 @@
-module com.example.projectone {
+module edu.bsu.cs222 {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
