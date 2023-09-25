@@ -16,7 +16,7 @@ public class PullfromWiki {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the name of the Wikipedia article: ");
+        System.out.print("Enter Article Name(Case-Specific): ");
         String articleTitle = scanner.nextLine().trim();
         if (articleTitle.isEmpty()) {
             MissingNameHandler();
@@ -30,11 +30,13 @@ public class PullfromWiki {
             }
             if (articleExists(jsonData)) {
                 printChanges(jsonData);
+                System.exit(0);
             } else {
                 System.out.println("Article not found: " + articleTitle);
             }
             printRawJson(jsonData);
             connection.getInputStream().close();
+            System.exit(0);
         } catch (IOException e) {
             NetworkErrorHandler(e);
         }
@@ -128,6 +130,7 @@ public class PullfromWiki {
             System.out.println("No query data found.");
         }
     }
+
 
     public static URLConnection connectToWikipedia(String articleTitle) throws IOException {
         String UrlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" +
