@@ -161,6 +161,11 @@ public class PullfromWiki {
     }
 
 
+    public static String readFileAsString(String s) throws IOException {
+        InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
+        return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
+        }
+
     }
 
 
