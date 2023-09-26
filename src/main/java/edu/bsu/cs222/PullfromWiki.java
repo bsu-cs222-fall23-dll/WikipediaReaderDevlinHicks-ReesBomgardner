@@ -157,16 +157,21 @@ public class PullfromWiki {
     }
 
     public static void printRawJson(String jsonData) {
-        System.out.println(jsonData);
+        System.out.println(jsonData + "\n");
     }
 
 
     public static String readFileAsString(String s) throws IOException {
-        InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
-        return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
+        try {
+            InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
+            return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
+        } catch (IOException e) {
+            System.err.println("IOException Detected! ");
         }
 
+        return s;
     }
+}
 
 
 
