@@ -166,7 +166,7 @@ public class PullfromWiki {
             InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
             return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
         } catch (IOException e) {
-            System.err.println("IOException Detected! ");
+            MissingNameHandler();
         }
 
         return s;
