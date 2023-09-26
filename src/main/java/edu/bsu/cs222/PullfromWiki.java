@@ -24,11 +24,11 @@ public class PullfromWiki {
         try {
             URLConnection connection = connectToWikipedia(articleTitle);
             String jsonData = readJsonAsStringFrom(connection);
-            String redirectedArticle = redirectCheck(jsonData);
+            String redirectedArticle = redirectChecker(jsonData);
             if (redirectedArticle != null) {
                 System.out.println("Redirected to: " + redirectedArticle);
             }
-            if (articleExists(jsonData)) {
+            if (articleExistenceCheck(jsonData)) {
                 printChanges(jsonData);
             } else {
                 System.out.println("Article not found: " + articleTitle);
@@ -42,7 +42,7 @@ public class PullfromWiki {
         scanner.close();
     }
 
-    private static String redirectCheck(String jsonData) {
+    private static String redirectChecker(String jsonData) {
         JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
         if (jsonObject.has("query")) {
             JsonObject query = jsonObject.getAsJsonObject("query");
@@ -68,7 +68,7 @@ public class PullfromWiki {
         System.exit(1);
     }
 
-    public static boolean articleExists(String jsonData) {
+    public static boolean articleExistenceCheck(String jsonData) {
         JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
         if (jsonObject.has("query")) {
             JsonObject query = jsonObject.getAsJsonObject("query");
