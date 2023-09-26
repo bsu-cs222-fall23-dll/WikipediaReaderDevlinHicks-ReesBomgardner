@@ -9,16 +9,16 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.net.URLConnection;
 
-public class tests {
+public class wikipediaTest {
     @Test
     public void TestWikiConnection() throws IOException{
         String name="Frank Zappa";
-        URLConnection connect = PullfromWiki.connectToWikipedia(name);
+        URLConnection connect = wikipediaLoader.connectToWikipedia(name);
         Assertions.assertNotNull(connect);
     }
     @Test
     public void TestFileRead() throws IOException{
-        String jsonData = PullfromWiki.readFileAsString("scratch.json");
+        String jsonData = wikipediaLoader.readFileAsString("scratch.json");
         Assertions.assertNotNull(jsonData);
     }
     @Test
@@ -33,7 +33,7 @@ public class tests {
 
     @Test
     public void testRevisionCount() throws IOException{
-        String jsonData = PullfromWiki.readFileAsString("scratch.json");
+        String jsonData = wikipediaLoader.readFileAsString("scratch.json");
         JsonArray revisions=getRevisions(jsonData);
         Assertions.assertEquals(4, revisions.size());
 

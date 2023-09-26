@@ -1,5 +1,4 @@
 package edu.bsu.cs222;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,7 +11,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.*;
 
-public class PullfromWiki {
+public class wikipediaLoader {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
