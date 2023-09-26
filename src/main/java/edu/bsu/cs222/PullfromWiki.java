@@ -115,7 +115,7 @@ public class PullfromWiki {
                                 String timestamp = changeObject.get("timestamp").getAsString();
                                 String user = changeObject.get("user").getAsString();
 
-                                System.out.println(timestamp + " " + user);
+                                System.out.println(timestamp + " " + user + "\n");
                             }
                         }
                     } else {
@@ -160,11 +160,9 @@ public class PullfromWiki {
         System.out.println(jsonData);
     }
 
-    public static String readFileAsString(String s) throws IOException {
-        InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
-        return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
-        }
+
     }
+
 
 
 
