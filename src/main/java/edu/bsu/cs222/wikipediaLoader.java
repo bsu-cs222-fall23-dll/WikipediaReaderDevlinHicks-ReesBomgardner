@@ -25,12 +25,12 @@ public class wikipediaLoader {
             String jsonData = readJsonAsStringFrom(connection);
             String redirectedArticle = redirectChecker(jsonData);
             if (redirectedArticle != null) {
-                System.out.println("Redirected to: " + redirectedArticle);
+                System.out.println("Redirect to: " + redirectedArticle);
             }
             if (articleExistenceCheck(jsonData)) {
                 printChanges(jsonData);
             } else {
-                System.out.println("Article not found: " + articleTitle);
+                System.out.println(articleTitle + " not found!");
             }
             printRawJson(jsonData);
             connection.getInputStream().close();
@@ -42,14 +42,14 @@ public class wikipediaLoader {
     }
 
     private static String redirectChecker(String jsonData) {
-        JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
-        if (jsonObject.has("query")) {
-            JsonObject query = jsonObject.getAsJsonObject("query");
-            if (query.has("redirects")) {
-                JsonArray redirects = query.getAsJsonArray("redirects");
-                if (redirects.size() > 0) {
-                    JsonObject firstRedirect = redirects.get(0).getAsJsonObject();
-                    return firstRedirect.get("to").getAsString();
+        JsonObject Object = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (Object.has("query")) {
+            JsonObject queryObject = Object.getAsJsonObject("query");
+            if (queryObject.has("redirects")) {
+                JsonArray redirectTotal = queryObject.getAsJsonArray("redirects");
+                if (redirectTotal.size() > 0) {
+                    JsonObject redirects = redirectTotal.get(0).getAsJsonObject();
+                    return redirects.get("to").getAsString();
                 }
             }
         }
@@ -63,14 +63,14 @@ public class wikipediaLoader {
     }
 
     private static void MissingNameHandler() {
-        System.err.println("Please Provide Article Name!");
-        System.exit(1);
+        System.err.println("Error: Article Name Not Given!");
+        System.exit(0);
     }
 
     public static boolean articleExistenceCheck(String jsonData) {
-        JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
-        if (jsonObject.has("query")) {
-            JsonObject query = jsonObject.getAsJsonObject("query");
+        JsonObject jsonArticle = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (jsonArticle.has("query")) {
+            JsonObject query = jsonArticle.getAsJsonObject("query");
             if (query.has("pages")) {
                 JsonObject pages = query.getAsJsonObject("pages");
                 for (String pageId : pages.keySet()) {
@@ -84,13 +84,12 @@ public class wikipediaLoader {
 
 
     public static void printChanges(String jsonData) {
-        JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
+        JsonObject jsonChanges = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (jsonChanges.has("query")) {
+            JsonObject queries = jsonChanges.getAsJsonObject("query");
 
-        if (jsonObject.has("query")) {
-            JsonObject query = jsonObject.getAsJsonObject("query");
-
-            if (query.has("pages")) {
-                JsonObject pages = query.getAsJsonObject("pages");
+            if (queries.has("pages")) {
+                JsonObject pages = queries.getAsJsonObject("pages");
 
                 for (String pageId : pages.keySet()) {
                     JsonObject page = pages.getAsJsonObject(pageId);
@@ -99,22 +98,23 @@ public class wikipediaLoader {
                         JsonArray revisions = page.getAsJsonArray("revisions");
 
                         if (revisions.size() == 0) {
-                            System.out.println("No recent changes found for the article: " + page.get("title"));
+                            System.out.println("No recent changes found in: " + page.get("title"));
                         } else {
-                            System.out.println("Recent changes for the article: " + page.get("title"));
-                            List<JsonObject> revisionList = new ArrayList<>();
+                            System.out.println("Recent changes for: " + page.get("title"));
+                            List<JsonObject> revisionsList = new ArrayList<>();
                             for (JsonElement revisionElement : revisions) {
-                                revisionList.add(revisionElement.getAsJsonObject());
+                                revisionsList.add(revisionElement.getAsJsonObject());
                             }
-                            revisionList.sort(Comparator.comparing(
+                            revisionsList.sort(Comparator.comparing(
                                     revision -> revision.get("timestamp").getAsString(),
                                     Comparator.reverseOrder()
                             ));
-                            for (JsonObject changeObject : revisionList) {
-                                String timestamp = changeObject.get("timestamp").getAsString();
-                                String user = changeObject.get("user").getAsString();
+                            for (JsonObject changeObject : revisionsList) {
+                                String time = changeObject.get("timestamp").getAsString();
+                                String users = changeObject.get("user").getAsString();
 
-                                System.out.println(timestamp + " " + user + "\n");
+
+                                System.out.println(time + " " + users + "\n");
                             }
                         }
                     } else {
@@ -122,10 +122,10 @@ public class wikipediaLoader {
                     }
                 }
             } else {
-                System.out.println("No query data found.");
+                System.out.println("Query Data Not Found!");
             }
         } else {
-            System.out.println("No query data found.");
+            System.out.println("Query Data Not Found!");
         }
     }
 
@@ -134,8 +134,8 @@ public class wikipediaLoader {
         String UrlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" +
                 articleTitle +
                 "&rvprop=timestamp|user&rvlimit=13&redirects";
-        URL url = new URL(UrlString);
-        URLConnection connection = url.openConnection();
+        URL site = new URL(UrlString);
+        URLConnection connection = site.openConnection();
         connection.setRequestProperty("User-Agent",
                 "CS222FirstProject/0.1 (devlin.hicks@bsu.edu)");
         connection.connect();
@@ -144,14 +144,14 @@ public class wikipediaLoader {
 
     public static String readJsonAsStringFrom(URLConnection connection) throws IOException {
         try (InputStream inputStream = connection.getInputStream()) {
-            InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
-            StringBuilder responseBuilder = new StringBuilder();
+            InputStreamReader streamReader = new InputStreamReader(inputStream, Charset.defaultCharset());
+            StringBuilder responseStringBuilder = new StringBuilder();
             char[] buffer = new char[1024];
-            int BytesRead;
-            while ((BytesRead = reader.read(buffer)) != -1) {
-                responseBuilder.append(buffer, 0, BytesRead);
+            int AllBytesRead;
+            while ((AllBytesRead = streamReader.read(buffer)) != -1) {
+                responseStringBuilder.append(buffer, 0, AllBytesRead);
             }
-            return responseBuilder.toString();
+            return responseStringBuilder.toString();
         }
     }
 
@@ -160,14 +160,13 @@ public class wikipediaLoader {
     }
 
 
-    public static String readFileAsString(String s) throws IOException {
+    public static String readFileAsString(String s) {
         try {
             InputStream file = Thread.currentThread().getContextClassLoader().getResourceAsStream("scratch.json");
             return new String(Objects.requireNonNull(file).readAllBytes(), Charset.defaultCharset());
         } catch (IOException e) {
             MissingNameHandler();
         }
-
         return s;
     }
 }
