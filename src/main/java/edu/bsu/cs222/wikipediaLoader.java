@@ -1,11 +1,6 @@
 package edu.bsu.cs222;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.google.gson.*;
+import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
@@ -13,43 +8,44 @@ import java.util.*;
 
 public class wikipediaLoader {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter Article Name(Case-Specific): ");
-        String articleTitle = scanner.nextLine().trim();
-        if (articleTitle.isEmpty()) {
+    public static void main(String[]args) {
+        Scanner terminal = new Scanner(System.in);
+        System.out.print("Type in Article Title: ");
+        String wikiTitle = terminal.nextLine();
+        if (wikiTitle.isBlank()) {
             MissingNameHandler();
         }
         try {
-            URLConnection connection = connectToWikipedia(articleTitle);
-            String jsonData = readJsonAsStringFrom(connection);
-            String redirectedArticle = redirectChecker(jsonData);
-            if (redirectedArticle != null) {
-                System.out.println("Redirect to: " + redirectedArticle);
+            URLConnection wikiConnection = connectToWikipedia(wikiTitle);
+            String jsonData = readJsonAsStringFrom(wikiConnection);
+            String articleRedirect = redirectChecker(jsonData);
+            if (articleRedirect != null) {
+                System.out.println("You will be redirected to " + articleRedirect);
             }
-            if (articleExistenceCheck(jsonData)) {
+            if (articleExistenceChecker(jsonData)) {
                 printChanges(jsonData);
             } else {
-                System.out.println(articleTitle + " not found!");
+                System.out.println(wikiTitle + " does not exist.");
             }
+            System.out.println("\n");
             printRawJson(jsonData);
-            connection.getInputStream().close();
+            wikiConnection.getInputStream().close();
             System.exit(0);
         } catch (IOException e) {
             NetworkErrorHandler(e);
         }
-        scanner.close();
+        terminal.close();
     }
 
     private static String redirectChecker(String jsonData) {
-        JsonObject Object = JsonParser.parseString(jsonData).getAsJsonObject();
-        if (Object.has("query")) {
-            JsonObject queryObject = Object.getAsJsonObject("query");
-            if (queryObject.has("redirects")) {
-                JsonArray redirectTotal = queryObject.getAsJsonArray("redirects");
-                if (redirectTotal.size() > 0) {
-                    JsonObject redirects = redirectTotal.get(0).getAsJsonObject();
-                    return redirects.get("to").getAsString();
+        JsonObject CheckObject = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (CheckObject.has("query")) {
+            JsonObject jsonQueryObject = CheckObject.getAsJsonObject("query");
+            if (jsonQueryObject.has("redirects")) {
+                JsonArray redirectArray = jsonQueryObject.getAsJsonArray("redirects");
+                if (redirectArray.size() > 0) {
+                    JsonObject recentRedirects = redirectArray.get(0).getAsJsonObject();
+                    return recentRedirects.get("to").getAsString();
                 }
             }
         }
@@ -57,26 +53,23 @@ public class wikipediaLoader {
     }
 
     private static void NetworkErrorHandler(IOException e) {
-        System.err.println("Error: Network Error has Occurred!");
+        System.err.println("Error: Network Error has been Detected!");
         e.printStackTrace();
         System.exit(1);
     }
 
     private static void MissingNameHandler() {
         System.err.println("Error: Article Name Not Given!");
-        System.exit(0);
+        System.exit(1);
     }
 
-    public static boolean articleExistenceCheck(String jsonData) {
+    public static boolean articleExistenceChecker(String jsonData) {
         JsonObject jsonArticle = JsonParser.parseString(jsonData).getAsJsonObject();
         if (jsonArticle.has("query")) {
-            JsonObject query = jsonArticle.getAsJsonObject("query");
-            if (query.has("pages")) {
-                JsonObject pages = query.getAsJsonObject("pages");
-                for (String pageId : pages.keySet()) {
-                    JsonObject page = pages.getAsJsonObject(pageId);
-                    return !page.has("missing");
-                }
+            JsonObject articleQuery = jsonArticle.getAsJsonObject("query");
+            if (articleQuery.has("pages")) {
+                JsonObject pages = articleQuery.getAsJsonObject("pages");
+                return pages.keySet().stream().map(pages::getAsJsonObject).findFirst().filter(page -> !page.has("missing")).isPresent();
             }
         }
         return false;
@@ -98,18 +91,18 @@ public class wikipediaLoader {
                         JsonArray revisions = page.getAsJsonArray("revisions");
 
                         if (revisions.size() == 0) {
-                            System.out.println("No recent changes found in: " + page.get("title"));
+                            System.out.println("No recent changes were found in: " + page.get("title"));
                         } else {
-                            System.out.println("Recent changes for: " + page.get("title"));
-                            List<JsonObject> revisionsList = new ArrayList<>();
+                            System.out.println("Recent changes found for: " + page.get("title"));
+                            List<JsonObject> revisionArrayList = new ArrayList<>();
                             for (JsonElement revisionElement : revisions) {
-                                revisionsList.add(revisionElement.getAsJsonObject());
+                                revisionArrayList.add(revisionElement.getAsJsonObject());
                             }
-                            revisionsList.sort(Comparator.comparing(
+                            revisionArrayList.sort(Comparator.comparing(
                                     revision -> revision.get("timestamp").getAsString(),
                                     Comparator.reverseOrder()
                             ));
-                            for (JsonObject changeObject : revisionsList) {
+                            for (JsonObject changeObject : revisionArrayList) {
                                 String time = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
 
@@ -118,7 +111,7 @@ public class wikipediaLoader {
                             }
                         }
                     } else {
-                        System.out.println("No recent changes found for the article: " + page.get("title"));
+                        System.out.println("No recent changes found in " + page.get("title"));
                     }
                 }
             } else {
