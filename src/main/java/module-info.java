@@ -11,7 +11,6 @@ module edu.bsu.cs222 {
     requires com.almasb.fxgl.all;
     requires com.google.gson;
     opens edu.bsu.cs222 to javafx.fxml;
-    exports com.example.projectone;
     exports edu.bsu.cs222;
 
 }

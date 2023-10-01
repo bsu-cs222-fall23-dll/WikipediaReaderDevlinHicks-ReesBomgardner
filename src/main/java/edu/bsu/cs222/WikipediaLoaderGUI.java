@@ -14,7 +14,7 @@ public class WikipediaLoaderGUI extends Application {
 
     public void start(Stage primaryStage) throws IOException {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("java/edu/bsu/cs222/scratch.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("scratch.fxml"));
             Parent root = loader.load();
             Controller control = loader.getController();
 

@@ -42,7 +42,7 @@ javafx {
 }
 run {
     doFirst {
-        jvmArgs = ['--module-path', classpath.asPath]
+        jvmArgs = ['--module-path', "src/main/java/edu/bsu/cs222"]
         jvmArgs = ['--add-modules', 'javafx.controls,javafx.fxml,javafx.web,javafx.media,javafx.swing']
     }
 }
@@ -74,9 +74,9 @@ dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
     implementation group: 'net.minidev', name: 'json-smart', version: '2.5.0'
     implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.9'
-    implementation 'org.openjfx:javafx-controls:17.0.2'
-    implementation 'org.openjfx:javafx-fxml:17.0.2'
-    implementation group: 'org.openjfx', name: 'javafx-web', version: '17.0.2'
+    implementation 'org.openjfx:javafx-controls:19'
+    implementation 'org.openjfx:javafx-fxml:19'
+    implementation group: 'org.openjfx', name: 'javafx-web', version: '19'
     implementation group: 'com.github.almasb', name: 'fxgl', version: '17.2'
 
 }
