@@ -32,8 +32,8 @@ tasks.withType(JavaCompile) {
 }
 
 application {
-    mainModule = 'com.example.projectone'
-    mainClass = 'com.example.projectone.HelloApplication'
+    mainModule = 'edu.bsu.cs222'
+    mainClass = 'edu.bsu.cs222.wikipediaLoaderGUI'
 }
 
 javafx {

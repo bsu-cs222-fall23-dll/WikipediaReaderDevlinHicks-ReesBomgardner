@@ -24,7 +24,7 @@ public class Controller{
             String jsonData=wikipediaLoader.readJsonAsStringFrom(connection);
             outputText.setText(jsonData);
         }catch(Exception e){
-            System.out.println("Error has occurred!");
+            System.out.println("Error: "+e.getMessage());
         }
     }
 }
