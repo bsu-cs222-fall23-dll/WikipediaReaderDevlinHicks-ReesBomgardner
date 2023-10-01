@@ -1,16 +1,22 @@
 package edu.bsu.cs222;
-import com.google.gson.*;
-import java.io.*;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.util.*;
-
 public class wikipediaLoader {
 
-    public static void main(String[]args) {
+
+    public static void main(String[] args) {
         Scanner terminal = new Scanner(System.in);
-        System.out.print("Type in Article Title: ");
+        System.out.println("Type in your Article Title Right Here: ");
         String wikiTitle = terminal.nextLine();
         if (wikiTitle.isBlank()) {
             MissingNameHandler();
@@ -37,7 +43,7 @@ public class wikipediaLoader {
         terminal.close();
     }
 
-    private static String redirectChecker(String jsonData) {
+    public static String redirectChecker(String jsonData) {
         JsonObject CheckObject = JsonParser.parseString(jsonData).getAsJsonObject();
         if (CheckObject.has("query")) {
             JsonObject jsonQueryObject = CheckObject.getAsJsonObject("query");
@@ -52,13 +58,13 @@ public class wikipediaLoader {
         return null;
     }
 
-    private static void NetworkErrorHandler(IOException e) {
+    public static void NetworkErrorHandler(IOException e) {
         System.err.println("Error: Network Error has been Detected!");
         e.printStackTrace();
         System.exit(1);
     }
 
-    private static void MissingNameHandler() {
+    public static void MissingNameHandler() {
         System.err.println("Error: Article Name Not Given!");
         System.exit(1);
     }
@@ -106,8 +112,8 @@ public class wikipediaLoader {
                                 String time = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
 
-
-                                System.out.println(time + " " + users + "\n");
+                                System.out.println("Time: " + time);
+                                System.out.println("User: " + users + "\n");
                             }
                         }
                     } else {
@@ -136,15 +142,15 @@ public class wikipediaLoader {
     }
 
     public static String readJsonAsStringFrom(URLConnection connection) throws IOException {
-        try (InputStream inputStream = connection.getInputStream()) {
-            InputStreamReader streamReader = new InputStreamReader(inputStream, Charset.defaultCharset());
-            StringBuilder responseStringBuilder = new StringBuilder();
-            char[] buffer = new char[1024];
+        try (InputStream dataStream = connection.getInputStream()) {
+            InputStreamReader streamReader = new InputStreamReader(dataStream, Charset.defaultCharset());
+            StringBuilder convertedString = new StringBuilder();
+            char[] stringBuffer = new char[1024];
             int AllBytesRead;
-            while ((AllBytesRead = streamReader.read(buffer)) != -1) {
-                responseStringBuilder.append(buffer, 0, AllBytesRead);
+            while ((AllBytesRead = streamReader.read(stringBuffer)) != -1) {
+                convertedString.append(stringBuffer, 0, AllBytesRead);
             }
-            return responseStringBuilder.toString();
+            return convertedString.toString();
         }
     }
 
@@ -163,6 +169,9 @@ public class wikipediaLoader {
         return s;
     }
 }
+
+
+
 
 
 

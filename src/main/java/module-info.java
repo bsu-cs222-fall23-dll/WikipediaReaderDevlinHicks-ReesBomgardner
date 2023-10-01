@@ -2,7 +2,6 @@ module edu.bsu.cs222 {
     requires javafx.controls;
     requires javafx.fxml;
     requires javafx.web;
-
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires net.synedra.validatorfx;
@@ -11,7 +10,6 @@ module edu.bsu.cs222 {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires com.google.gson;
-
     opens edu.bsu.cs222 to javafx.fxml;
     exports edu.bsu.cs222;
 
