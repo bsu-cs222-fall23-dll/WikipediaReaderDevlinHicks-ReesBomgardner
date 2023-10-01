@@ -5,17 +5,24 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
+import java.io.IOException;
+
 public class WikipediaLoaderGUI extends Application {
-    public static void main(String [] args){
+    public static void main(String[] args) {
         launch(args);
     }
-    @Override
-    public void start(Stage primaryStage) throws Exception{
-        FXMLLoader load=new FXMLLoader(getClass().getResource("java/edu/bsu/cs222/scratch.fxml"));
-        Parent root=load.load();
-        Controller control=load.getController();
-        primaryStage.setTitle("Wikipedia Revision Loader");
-        primaryStage.setScene(new Scene(root,800,600));
-        primaryStage.show();
+
+    public void start(Stage primaryStage) throws IOException {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("java/edu/bsu/cs222/scratch.fxml"));
+            Parent root = loader.load();
+            Controller control = loader.getController();
+
+            primaryStage.setTitle("Wikipedia Revision Loader");
+            primaryStage.setScene(new Scene(root, 800, 600));
+            primaryStage.show();
+        } catch (IOException e) {
+            System.out.println("IO Exception has occurred!");
+        }
     }
 }
