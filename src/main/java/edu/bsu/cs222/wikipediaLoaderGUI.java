@@ -15,7 +15,7 @@ public class wikipediaLoaderGUI extends Application {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("src/main/resources/scratch.fxml"));
             Parent root = loader.load();
-            Controller control = loader.getController();
+            loader.getController();
             primaryStage.setTitle("Wikipedia Revision Loader");
             primaryStage.setScene(new Scene(root, 800, 600));
             primaryStage.show();
