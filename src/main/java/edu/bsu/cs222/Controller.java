@@ -28,14 +28,67 @@ public class Controller {
 
     public void retrieveWikipedia(ActionEvent actionEvent) {
         String title = titleField.getText();
+        if(title.isBlank()){
+            MissingNameHandler();
+        }
+
         try {
             URLConnection connection = connectToWikipedia(title);
             String jsonData = readJsonAsStringFrom(connection);
-            outputText.setText(jsonData);
+            Boolean existence=articleExistenceChecker(jsonData);
+            if (existence) {
+                outputText.appendText("Article exists.\n");
+            } else {
+                outputText.appendText("Article does not exist.\n");
+            }
+
+            String redirectTarget = redirectChecker(jsonData);
+            if (redirectTarget != null) {
+                outputText.appendText("Redirected to: " + redirectTarget + "\n");
+            }
             printRecentChanges(jsonData);
-        } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+        } catch (IOException e) {
+            NetworkErrorHandler(e);
         }
+    }
+
+
+    public static String redirectChecker(String jsonData) {
+        JsonObject CheckObject = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (CheckObject.has("query")) {
+            JsonObject jsonQueryObject = CheckObject.getAsJsonObject("query");
+            if (jsonQueryObject.has("redirects")) {
+                JsonArray redirectArray = jsonQueryObject.getAsJsonArray("redirects");
+                if (redirectArray.size() > 0) {
+                    JsonObject recentRedirects = redirectArray.get(0).getAsJsonObject();
+                    return recentRedirects.get("to").getAsString();
+                }
+            }
+        }
+        return null;
+    }
+
+    public static void NetworkErrorHandler(IOException e) {
+        System.err.println("Error: Network Error has been Detected!");
+        e.printStackTrace();
+        System.exit(1);
+    }
+
+    public static void MissingNameHandler() {
+        System.err.println("Error: Article Name Not Given!");
+        System.exit(1);
+    }
+
+    public static boolean articleExistenceChecker(String jsonData) {
+        JsonObject jsonArticle = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (jsonArticle.has("query")) {
+            JsonObject articleQuery = jsonArticle.getAsJsonObject("query");
+            if (articleQuery.has("pages")) {
+                JsonObject pages = articleQuery.getAsJsonObject("pages");
+                return pages.keySet().stream().map(pages::getAsJsonObject).findFirst().filter(page -> !page.has("missing")).isPresent();
+            }
+        }
+        return false;
     }
 
     private URLConnection connectToWikipedia(String articleTitle) throws IOException {
