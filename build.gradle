@@ -13,15 +13,19 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
-        url 'https://repo.maven.apache.org/maven2'}
-    maven { url 'https://repo.maven.apache.org/maven2/eu/hansolo/fx/countries/17.0.23/' }
-    maven{
+        url 'https://repo.maven.apache.org/maven2'
+    }
+    maven {
+        url 'https://repo.maven.apache.org/maven2/eu/hansolo/fx/countries/17.0.23/'
+    }
+    maven {
         url 'https://repo.maven.apache.org/maven2/org/openjfx/javafx/17.0.2/javafx-17.0.2.pom'
     }
 }
 
 ext {
     junitVersion = '5.9.1'
+    javafxVersion = '13.0.2'
 }
 
 sourceCompatibility = '19'
@@ -37,9 +41,12 @@ application {
 }
 
 javafx {
-    version = '19'
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.web', 'javafx.media','javafx.swing']
+    javafx {
+        modules = [ 'javafx.controls', 'javafx.fxml','javafx.swing','javafx.web','javafx.media' ]
+        version = javafxVersion
+    }
 }
+
 run {
     doFirst {
         jvmArgs = ['--module-path', "src/main/java/edu/bsu/cs222"]
@@ -48,36 +55,29 @@ run {
 }
 
 dependencies {
-    implementation('org.controlsfx:controlsfx:11.1.2')
-    implementation('com.dlsc.formsfx:formsfx-core:11.5.0') {
-        exclude(group: 'org.openjfx')
-    }
-    implementation('net.synedra:validatorfx:0.4.0') {
-        exclude(group: 'org.openjfx')
-    }
-    implementation('org.kordamp.ikonli:ikonli-javafx:12.3.1')
-    implementation('org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0')
-    implementation('eu.hansolo:tilesfx:17.1.15') {
-        exclude(group: 'org.openjfx')
-    }
-
-    implementation group: 'eu.hansolo.fx', name: 'countries', version: '17.0.23'
-    implementation group: 'eu.hansolo.fx', name: 'heatmap', version: '17.0.23'
-    implementation group: 'eu.hansolo', name: 'toolbox', version: '17.0.23'
-    implementation group: 'eu.hansolo', name: 'toolboxfx', version: '17.0.28'
+    implementation 'org.controlsfx:controlsfx:11.1.2'
+    implementation 'com.dlsc.formsfx:formsfx-core:11.5.0'
+    implementation 'net.synedra:validatorfx:0.4.0'
+    implementation 'org.kordamp.ikonli:ikonli-javafx:12.3.1'
+    implementation 'org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0'
+    implementation 'eu.hansolo:tilesfx:17.1.15'
+    implementation 'eu.hansolo.fx:countries:17.0.23'
+    implementation 'eu.hansolo.fx:heatmap:17.0.23'
+    implementation 'eu.hansolo:toolbox:17.0.23'
+    implementation 'eu.hansolo:toolboxfx:17.0.28'
     implementation 'org.openjfx:javafx-controls:17.0.2'
     implementation 'org.openjfx:javafx-fxml:17.0.2'
-    implementation group: 'org.openjfx', name: 'javafx-swing', version: '17.0.2'
-    implementation('com.google.code.gson:gson:2.10.1')
+    implementation 'org.openjfx:javafx-swing:17.0.2'
+    implementation 'com.google.code.gson:gson:2.10.1'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
-    testImplementation('org.junit.jupiter:junit-jupiter:5.9.0')
-    implementation group: 'net.minidev', name: 'json-smart', version: '2.5.0'
-    implementation group: 'org.slf4j', name: 'slf4j-nop', version: '2.0.9'
-    implementation 'org.openjfx:javafx-controls:19'
-    implementation 'org.openjfx:javafx-fxml:19'
-    implementation group: 'org.openjfx', name: 'javafx-web', version: '19'
-    implementation group: 'com.github.almasb', name: 'fxgl', version: '17.2'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.0'
+    implementation 'net.minidev:json-smart:2.5.0'
+    implementation 'org.slf4j:slf4j-nop:2.0.9'
+    implementation "org.openjfx:javafx-controls:${javafxVersion}"
+    implementation "org.openjfx:javafx-fxml:${javafxVersion}"
+    implementation "org.openjfx:javafx-web:${javafxVersion}"
+    implementation 'com.github.almasb:fxgl:17.2'
 
 }
 

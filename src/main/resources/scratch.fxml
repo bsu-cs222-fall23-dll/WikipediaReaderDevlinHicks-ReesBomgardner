@@ -7,8 +7,8 @@
       <Label alignment="TOP_CENTER" text="Wikipedia Text Loader" />
       <HBox alignment="CENTER" prefHeight="272.0" prefWidth="903.0">
             <Label prefHeight="17.0" prefWidth="36.0" text="Title:" />
-            <TextField fx:id="TextField" />
+            <TextField fx:id="titleField" />
             <Button alignment="BOTTOM_CENTER" mnemonicParsing="false" onAction="#retrieveWikipedia" text="Enter" />
       </HBox>
-      <TextArea fx:id="outputTextArea" prefWidth="600" prefHeight="400" />
+      <TextArea fx:id="outputText" prefWidth="600" prefHeight="400" />
 </VBox>

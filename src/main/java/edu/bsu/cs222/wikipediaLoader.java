@@ -111,8 +111,7 @@ public class wikipediaLoader {
                             for (JsonObject changeObject : revisionArrayList) {
                                 String time = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
-
-                                System.out.println("Time: " + time);
+                                System.out.println("Time: " + time + "Users: "+ users+ "\n");
                                 System.out.println("User: " + users + "\n");
                             }
                         }
