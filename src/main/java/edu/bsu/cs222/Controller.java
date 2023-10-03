@@ -29,31 +29,31 @@ public class Controller {
     public void retrieveWikipedia(ActionEvent actionEvent) {
         String title = titleField.getText();
         if(title.isBlank()){
-            MissingNameHandler();
+            missingName();
         }
 
         try {
             URLConnection connection = connectToWikipedia(title);
             String jsonData = readJsonAsStringFrom(connection);
-            Boolean existence=articleExistenceChecker(jsonData);
+            Boolean existence= articleExistence(jsonData);
             if (existence) {
                 outputText.appendText("Article exists.\n");
             } else {
                 outputText.appendText("Article does not exist.\n");
             }
 
-            String redirectTarget = redirectChecker(jsonData);
+            String redirectTarget = redirectTester(jsonData);
             if (redirectTarget != null) {
                 outputText.appendText("Redirected to: " + redirectTarget + "\n");
             }
             printRecentChanges(jsonData);
         } catch (IOException e) {
-            NetworkErrorHandler(e);
+            networkError(e);
         }
     }
 
 
-    public static String redirectChecker(String jsonData) {
+    public static String redirectTester(String jsonData) {
         JsonObject CheckObject = JsonParser.parseString(jsonData).getAsJsonObject();
         if (CheckObject.has("query")) {
             JsonObject jsonQueryObject = CheckObject.getAsJsonObject("query");
@@ -68,18 +68,18 @@ public class Controller {
         return null;
     }
 
-    public static void NetworkErrorHandler(IOException e) {
+    public static void networkError(IOException e) {
         System.err.println("Error: Network Error has been Detected!");
         e.printStackTrace();
         System.exit(1);
     }
 
-    public static void MissingNameHandler() {
+    public static void missingName() {
         System.err.println("Error: Article Name Not Given!");
         System.exit(1);
     }
 
-    public static boolean articleExistenceChecker(String jsonData) {
+    public static boolean articleExistence(String jsonData) {
         JsonObject jsonArticle = JsonParser.parseString(jsonData).getAsJsonObject();
         if (jsonArticle.has("query")) {
             JsonObject articleQuery = jsonArticle.getAsJsonObject("query");
