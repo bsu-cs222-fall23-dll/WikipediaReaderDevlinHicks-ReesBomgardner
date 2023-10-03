@@ -7,16 +7,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class wikipediaLoaderGUI extends Application {
-
     public static void main(String[] args) {
         launch(args);
     }
-
     public void start(Stage primaryStage) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/scratch.fxml"));
             Parent root = loader.load();
-            Controller controller = loader.getController();
+            loader.getController();
             primaryStage.setTitle("Wikipedia Revision Loader");
             primaryStage.setScene(new Scene(root, 800, 600));
             primaryStage.show();

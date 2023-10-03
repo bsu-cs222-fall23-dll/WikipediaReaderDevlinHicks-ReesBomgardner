@@ -8,7 +8,6 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -68,15 +67,11 @@ public class Controller {
     }
 
     public void networkError() {
-        Platform.runLater(() -> {
-            outputText.appendText("Network Error has been detected!\n");
-        });
+        Platform.runLater(() -> outputText.appendText("Network Error has been detected!\n"));
     }
 
     public void missingName() {
-        Platform.runLater(() -> {
-            outputText.appendText("Article Name not given!\n");
-        });
+        Platform.runLater(() -> outputText.appendText("Article Name not given!\n"));
     }
 
 
@@ -141,10 +136,14 @@ public class Controller {
                         } else {
                             outputText.appendText("Recent changes found for: " + page.get("title") + "\n");
                             for (JsonElement revisionElement : revisionQuery) {
+                                int number=0;
+                                while(number<13){
+                                    number++;
+                                }
                                 JsonObject changeObject = revisionElement.getAsJsonObject();
                                 String time = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
-                                outputText.appendText("Time: " + time + " User(s): " + users + "\n");
+                                outputText.appendText("Time: " + time + " | " + " User(s): " + users + " |" + "\n");
                             }
                         }
                     } else {
