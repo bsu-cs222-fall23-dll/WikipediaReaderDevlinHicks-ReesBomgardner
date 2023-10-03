@@ -47,7 +47,7 @@ public class Controller {
             }
             printRecentChanges(jsonData);
         } catch (IOException e) {
-            networkError(e);
+            networkError();
         }
     }
 
@@ -67,7 +67,7 @@ public class Controller {
         return null;
     }
 
-    public void networkError(IOException e) {
+    public void networkError() {
         Platform.runLater(() -> {
             outputText.appendText("Network Error has been detected!\n");
         });

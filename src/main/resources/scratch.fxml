@@ -4,7 +4,6 @@
 <?import javafx.scene.layout.*?>
 
 <VBox prefHeight="217.0" prefWidth="821.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml" fx:controller="edu.bsu.cs222.Controller">
-      <Label alignment="TOP_CENTER" text="Wikipedia Text Loader" />
       <HBox alignment="CENTER" prefHeight="272.0" prefWidth="903.0">
             <Label prefHeight="17.0" prefWidth="36.0" text="Title:" />
             <TextField fx:id="titleField" />
