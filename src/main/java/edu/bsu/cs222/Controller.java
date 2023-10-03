@@ -5,7 +5,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import java.io.IOException;
@@ -24,7 +23,7 @@ public class Controller {
     private TextArea outputText;
 
 
-    public void retrieveWikipedia(ActionEvent actionEvent) {
+    public void retrieveWikipedia() {
         String title = titleField.getText();
         if(title.isBlank()){
             missingName();
