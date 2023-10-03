@@ -5,3 +5,7 @@ could work but "Thomas Jefferson" will not when entering into the program.
 
 One more thing, you will probably run into a "CompileJava" error. At least I did when I ran the file on my computer.
 You will just need to run the file a second time, and it should work to fix said issue. Alternatively, one could try refreshing the dependencies and this might fix it. 
+
+Iteration Two:
+In this project, the user will type in an article name in the GUI. The output will be the Article's latest changes, times, and the users who changed the articles.
+Many of the same rules that applied to the first iteration will apply to the second iteration as well.
