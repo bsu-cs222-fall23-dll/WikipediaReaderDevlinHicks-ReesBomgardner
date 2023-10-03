@@ -30,8 +30,8 @@ public class Controller {
         }
 
         try {
-            URLConnection connection = connectToWikipedia(title);
-            String jsonData = readJsonAsStringFrom(connection);
+            URLConnection connection = wikipediaConnection(title);
+            String jsonData = readJson(connection);
             boolean existence= articleExistence(jsonData);
             if (existence) {
                 outputText.appendText(title+" exists\n");
@@ -86,7 +86,7 @@ public class Controller {
         return false;
     }
 
-    private URLConnection connectToWikipedia(String articleTitle) throws IOException {
+    private URLConnection wikipediaConnection(String articleTitle) throws IOException {
         String urlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" +
                 articleTitle +
                 "&rvprop=timestamp|user&rvlimit=13&redirects";
@@ -98,7 +98,7 @@ public class Controller {
         return connect;
     }
 
-    private String readJsonAsStringFrom(URLConnection connection) {
+    private String readJson(URLConnection connection) {
         try {
             InputStream stream = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(stream, Charset.defaultCharset());

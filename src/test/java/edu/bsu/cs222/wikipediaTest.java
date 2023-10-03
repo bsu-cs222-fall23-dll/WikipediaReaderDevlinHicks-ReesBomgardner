@@ -1,5 +1,4 @@
 package edu.bsu.cs222;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -16,7 +15,7 @@ public class wikipediaTest {
         Assertions.assertNotNull(testConnect);
     }
     @Test
-    public void TestFileRead() throws IOException{
+    public void TestFileRead() {
         String fileData = wikipediaLoader.readFileAsString("scratch.json");
         Assertions.assertNotNull(fileData);
     }
@@ -31,10 +30,14 @@ public class wikipediaTest {
     }
 
     @Test
-    public void testRevisionCount() throws IOException{
+    public void testRevisionCount() {
         String revisionTestData = wikipediaLoader.readFileAsString("scratch.json");
         JsonArray revisions=getRevisions(revisionTestData);
         Assertions.assertEquals(4, revisions.size());
+
+    }
+    @Test
+    public void testGUI(){
 
     }
 
