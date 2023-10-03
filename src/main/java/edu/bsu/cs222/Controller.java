@@ -135,10 +135,6 @@ public class Controller {
                         } else {
                             outputText.appendText("Recent changes found for: " + page.get("title") + "\n");
                             for (JsonElement revisionElement : revisionQuery) {
-                                int number=0;
-                                while(number<13){
-                                    number++;
-                                }
                                 JsonObject changeObject = revisionElement.getAsJsonObject();
                                 String time = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
