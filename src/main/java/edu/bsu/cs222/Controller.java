@@ -10,9 +10,9 @@ import javafx.scene.control.*;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.charset.Charset;
+
 
 
 public class Controller {
@@ -44,8 +44,11 @@ public class Controller {
                 outputText.appendText("Redirected to: " + redirectTarget + "\n");
             }
             printRecentChanges(jsonData);
-        } catch (IOException e) {
+        } catch (SocketException e) {
             networkError();
+        } catch (IOException e){
+            ioHandler();
+
         }
     }
 
@@ -66,7 +69,11 @@ public class Controller {
     }
 
     public void networkError() {
+
         Platform.runLater(() -> outputText.appendText("Network Error has been detected!\n"));
+    }
+    public void ioHandler(){
+        Platform.runLater(()-> outputText.appendText("IO Error has been detected!\n"));
     }
 
     public void missingName() {
