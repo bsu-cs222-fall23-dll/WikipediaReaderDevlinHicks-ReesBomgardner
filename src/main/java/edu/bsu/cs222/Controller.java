@@ -21,8 +21,6 @@ public class Controller {
     @FXML
     private TextField titleField;
     @FXML
-    private Button retrieve;
-    @FXML
     private TextArea outputText;
 
 
@@ -35,7 +33,7 @@ public class Controller {
         try {
             URLConnection connection = connectToWikipedia(title);
             String jsonData = readJsonAsStringFrom(connection);
-            Boolean existence= articleExistence(jsonData);
+            boolean existence= articleExistence(jsonData);
             if (existence) {
                 outputText.appendText("Article exists.\n");
             } else {
@@ -59,7 +57,7 @@ public class Controller {
             JsonObject jsonQueryObject = CheckObject.getAsJsonObject("query");
             if (jsonQueryObject.has("redirects")) {
                 JsonArray redirectArray = jsonQueryObject.getAsJsonArray("redirects");
-                if (redirectArray.size() > 0) {
+                if (!redirectArray.isEmpty()) {
                     JsonObject recentRedirects = redirectArray.get(0).getAsJsonObject();
                     return recentRedirects.get("to").getAsString();
                 }
@@ -68,14 +66,14 @@ public class Controller {
         return null;
     }
 
-    public static void networkError(IOException e) {
-        System.err.println("Error: Network Error has been Detected!");
+    public  void networkError(IOException e) {
+        outputText.appendText("Error: Network Error has been Detected!");
         e.printStackTrace();
         System.exit(1);
     }
 
-    public static void missingName() {
-        System.err.println("Error: Article Name Not Given!");
+    public void missingName() {
+        outputText.appendText("Article Name not given!");
         System.exit(1);
     }
 
@@ -105,19 +103,18 @@ public class Controller {
 
     private String readJsonAsStringFrom(URLConnection connection) {
         try {
-            InputStream dataStream = connection.getInputStream();
-            InputStreamReader streamReader = new InputStreamReader(dataStream, Charset.defaultCharset());
+            InputStream stream = connection.getInputStream();
+            InputStreamReader reader = new InputStreamReader(stream, Charset.defaultCharset());
             StringBuilder String = new StringBuilder();
             char[] bugger = new char[1024];
             int bytesRead;
-            while ((bytesRead = streamReader.read(bugger)) != -1) {
+            while ((bytesRead = reader.read(bugger)) != -1) {
                 String.append(bugger, 0, bytesRead);
             }
             return String.toString();
 
         } catch (IOException e) {
             System.err.println("Error: Error Detected while reading JSON Data!");
-            e.getMessage();
             return "";
         }
     }
@@ -128,27 +125,27 @@ public class Controller {
             JsonObject queries = changes.getAsJsonObject("query");
 
             if (queries.has("pages")) {
-                JsonObject pages = queries.getAsJsonObject("pages");
+                JsonObject pageQuery = queries.getAsJsonObject("pages");
 
-                for (String pageId : pages.keySet()) {
-                    JsonObject page = pages.getAsJsonObject(pageId);
+                for (String pageId : pageQuery.keySet()) {
+                    JsonObject page = pageQuery.getAsJsonObject(pageId);
 
                     if (page.has("revisions")) {
-                        JsonArray revisions = page.getAsJsonArray("revisions");
+                        JsonArray revisionQuery = page.getAsJsonArray("revisions");
 
-                        if (revisions.size() == 0) {
+                        if (revisionQuery.isEmpty()) {
                             outputText.appendText("No recent changes were found in: " + page.get("title") + "\n");
                         } else {
                             outputText.appendText("Recent changes found for: " + page.get("title") + "\n");
-                            for (JsonElement revisionElement : revisions) {
+                            for (JsonElement revisionElement : revisionQuery) {
                                 JsonObject changeObject = revisionElement.getAsJsonObject();
                                 String time = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
-                                outputText.appendText("Time: " + time + " Users: " + users + "\n");
+                                outputText.appendText("Time: " + time + " User(s): " + users + "\n");
                             }
                         }
                     } else {
-                        outputText.appendText("No recent changes found in " + page.get("title") + "\n");
+                        outputText.appendText("No recent changes were found for " + page.get("title") + "\n");
                     }
                 }
             } else {
