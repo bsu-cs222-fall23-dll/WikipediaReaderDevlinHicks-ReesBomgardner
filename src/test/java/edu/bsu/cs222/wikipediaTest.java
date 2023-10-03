@@ -36,10 +36,6 @@ public class wikipediaTest {
         Assertions.assertEquals(4, revisions.size());
 
     }
-    @Test
-    public void testGUI(){
-
-    }
 
 
 }
