@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -35,9 +36,9 @@ public class Controller {
             String jsonData = readJsonAsStringFrom(connection);
             boolean existence= articleExistence(jsonData);
             if (existence) {
-                outputText.appendText("Article exists.\n");
+                outputText.appendText(title+" exists\n");
             } else {
-                outputText.appendText("Article does not exist.\n");
+                outputText.appendText(title+ " does not exist.\n");
             }
 
             String redirectTarget = redirectTester(jsonData);
@@ -66,16 +67,18 @@ public class Controller {
         return null;
     }
 
-    public  void networkError(IOException e) {
-        outputText.appendText("Error: Network Error has been Detected!");
-        e.printStackTrace();
-        System.exit(1);
+    public void networkError(IOException e) {
+        Platform.runLater(() -> {
+            outputText.appendText("Network Error has been detected!\n");
+        });
     }
 
     public void missingName() {
-        outputText.appendText("Article Name not given!");
-        System.exit(1);
+        Platform.runLater(() -> {
+            outputText.appendText("Article Name not given!\n");
+        });
     }
+
 
     public static boolean articleExistence(String jsonData) {
         JsonObject jsonArticle = JsonParser.parseString(jsonData).getAsJsonObject();
