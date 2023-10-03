@@ -30,8 +30,8 @@ public class Controller {
         }
 
         try {
-            URLConnection connection = wikipediaConnection(title);
-            String jsonData = readJson(connection);
+            URLConnection connect = wikipediaConnection(title);
+            String jsonData = readJson(connect);
             boolean existence= articleExistence(jsonData);
             if (existence) {
                 outputText.appendText(title+" exists\n");
@@ -39,9 +39,9 @@ public class Controller {
                 outputText.appendText(title+ " does not exist.\n");
             }
 
-            String redirectTarget = redirectTester(jsonData);
-            if (redirectTarget != null) {
-                outputText.appendText("Redirected to: " + redirectTarget + "\n");
+            String target = redirectTester(jsonData);
+            if (target != null) {
+                outputText.appendText("You will be redirected to: " + target + "\n");
             }
             printRecentChanges(jsonData);
         } catch (SocketException e) {
@@ -56,20 +56,19 @@ public class Controller {
     public static String redirectTester(String jsonData) {
         JsonObject CheckObject = JsonParser.parseString(jsonData).getAsJsonObject();
         if (CheckObject.has("query")) {
-            JsonObject jsonQueryObject = CheckObject.getAsJsonObject("query");
-            if (jsonQueryObject.has("redirects")) {
-                JsonArray redirectArray = jsonQueryObject.getAsJsonArray("redirects");
-                if (!redirectArray.isEmpty()) {
-                    JsonObject recentRedirects = redirectArray.get(0).getAsJsonObject();
-                    return recentRedirects.get("to").getAsString();
+            JsonObject QueryObject = CheckObject.getAsJsonObject("query");
+            if (QueryObject.has("redirects")) {
+                JsonArray array = QueryObject.getAsJsonArray("redirects");
+                if (!array.isEmpty()) {
+                    JsonObject redirects = array.get(0).getAsJsonObject();
+                    return redirects.get("to").getAsString();
                 }
             }
         }
         return null;
     }
 
-    public void networkError() {
-
+    public void networkError(){
         Platform.runLater(() -> outputText.appendText("Network Error has been detected!\n"));
     }
     public void ioHandler(){
@@ -82,12 +81,12 @@ public class Controller {
 
 
     public static boolean articleExistence(String jsonData) {
-        JsonObject jsonArticle = JsonParser.parseString(jsonData).getAsJsonObject();
-        if (jsonArticle.has("query")) {
-            JsonObject articleQuery = jsonArticle.getAsJsonObject("query");
-            if (articleQuery.has("pages")) {
-                JsonObject pages = articleQuery.getAsJsonObject("pages");
-                return pages.keySet().stream().map(pages::getAsJsonObject).findFirst().filter(page -> !page.has("missing")).isPresent();
+        JsonObject article = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (article.has("query")) {
+            JsonObject query = article.getAsJsonObject("query");
+            if (query.has("pages")) {
+                JsonObject pageCheck = query.getAsJsonObject("pages");
+                return pageCheck.keySet().stream().map(pageCheck::getAsJsonObject).findFirst().filter(page -> !page.has("missing")).isPresent();
             }
         }
         return false;
@@ -98,11 +97,11 @@ public class Controller {
                 articleTitle +
                 "&rvprop=timestamp|user&rvlimit=13&redirects";
         URL website = new URL(urlString);
-        URLConnection connect = website.openConnection();
-        connect.setRequestProperty("User-Agent",
+        URLConnection wikiConnection = website.openConnection();
+        wikiConnection.setRequestProperty("User-Agent",
                 "CS222FirstProject/0.1 (devlin.hicks@bsu.edu)");
-        connect.connect();
-        return connect;
+        wikiConnection.connect();
+        return wikiConnection;
     }
 
     private String readJson(URLConnection connection) {
