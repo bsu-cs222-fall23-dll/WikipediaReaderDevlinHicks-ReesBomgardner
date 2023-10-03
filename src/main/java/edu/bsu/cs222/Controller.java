@@ -123,9 +123,9 @@ public class Controller {
     }
 
     private void printRecentChanges(String jsonData) {
-        JsonObject jsonChanges = JsonParser.parseString(jsonData).getAsJsonObject();
-        if (jsonChanges.has("query")) {
-            JsonObject queries = jsonChanges.getAsJsonObject("query");
+        JsonObject changes = JsonParser.parseString(jsonData).getAsJsonObject();
+        if (changes.has("query")) {
+            JsonObject queries = changes.getAsJsonObject("query");
 
             if (queries.has("pages")) {
                 JsonObject pages = queries.getAsJsonObject("pages");
