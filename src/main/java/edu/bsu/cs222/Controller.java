@@ -90,10 +90,10 @@ public class Controller {
     }
 
     private URLConnection wikipediaConnection(String articleTitle) throws IOException {
-        String urlString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" +
+        String webString = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=revisions&titles=" +
                 articleTitle +
                 "&rvprop=timestamp|user&rvlimit=13&redirects";
-        URL website = new URL(urlString);
+        URL website = new URL(webString);
         URLConnection wikiConnection = website.openConnection();
         wikiConnection.setRequestProperty("User-Agent",
                 "CS222FirstProject/0.1 (devlin.hicks@bsu.edu)");
@@ -134,9 +134,9 @@ public class Controller {
                         JsonArray revisionQuery = page.getAsJsonArray("revisions");
 
                         if (revisionQuery.isEmpty()) {
-                            outputText.appendText("No recent changes were found in: " + page.get("title") + "\n");
+                            outputText.appendText("Recent changes have not been found in: " + page.get("title") + "\n");
                         } else {
-                            outputText.appendText("Recent changes found for: " + page.get("title") + "\n");
+                            outputText.appendText("Recent changes were found in: " + page.get("title") + "\n");
                             for (JsonElement revisionElement : revisionQuery) {
                                 JsonObject changeObject = revisionElement.getAsJsonObject();
                                 String revisionTime = changeObject.get("timestamp").getAsString();
