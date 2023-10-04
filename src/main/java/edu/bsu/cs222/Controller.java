@@ -1,5 +1,4 @@
 package edu.bsu.cs222;
-
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -12,9 +11,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.*;
 import java.nio.charset.Charset;
-
-
-
 public class Controller {
 
     @FXML
@@ -34,7 +30,7 @@ public class Controller {
             String jsonData = readJson(connect);
             boolean existence= articleExistence(jsonData);
             if (existence) {
-                outputText.appendText(title+" exists\n");
+                outputText.appendText("Wikipedia Article has been found.\n");
             } else {
                 outputText.appendText(title+ " does not exist.\n");
             }
@@ -42,6 +38,7 @@ public class Controller {
             String target = redirectTester(jsonData);
             if (target != null) {
                 outputText.appendText("You will be redirected to: " + target + "\n");
+
             }
             printRecentChanges(jsonData);
         } catch (SocketException e) {
@@ -60,8 +57,8 @@ public class Controller {
             if (QueryObject.has("redirects")) {
                 JsonArray array = QueryObject.getAsJsonArray("redirects");
                 if (!array.isEmpty()) {
-                    JsonObject redirects = array.get(0).getAsJsonObject();
-                    return redirects.get("to").getAsString();
+                    JsonObject allRedirects = array.get(0).getAsJsonObject();
+                    return allRedirects.get("to").getAsString();
                 }
             }
         }
@@ -109,10 +106,10 @@ public class Controller {
             InputStream stream = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(stream, Charset.defaultCharset());
             StringBuilder String = new StringBuilder();
-            char[] bugger = new char[1024];
+            char[] characterBuffer = new char[1024];
             int bytesRead;
-            while ((bytesRead = reader.read(bugger)) != -1) {
-                String.append(bugger, 0, bytesRead);
+            while ((bytesRead = reader.read(characterBuffer)) != -1) {
+                String.append(characterBuffer, 0, bytesRead);
             }
             return String.toString();
 
@@ -142,13 +139,13 @@ public class Controller {
                             outputText.appendText("Recent changes found for: " + page.get("title") + "\n");
                             for (JsonElement revisionElement : revisionQuery) {
                                 JsonObject changeObject = revisionElement.getAsJsonObject();
-                                String time = changeObject.get("timestamp").getAsString();
+                                String revisionTime = changeObject.get("timestamp").getAsString();
                                 String users = changeObject.get("user").getAsString();
-                                outputText.appendText("Time: " + time + " | " + " User(s): " + users + " |" + "\n");
+                                outputText.appendText("Time: " + revisionTime + " | " + " User(s): " + users + " |" + "\n");
                             }
                         }
                     } else {
-                        outputText.appendText("No recent changes were found for " + page.get("title") + "\n");
+                        outputText.appendText("No recent changes were found in " + page.get("title") + "\n");
                     }
                 }
             } else {

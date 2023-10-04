@@ -12,10 +12,10 @@ public class wikipediaLoaderGUI extends Application {
     }
     public void start(Stage primaryStage) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/scratch.fxml"));
-            Parent root = loader.load();
-            loader.getController();
-            primaryStage.setTitle("Wikipedia Revision Loader");
+            FXMLLoader resourceLoader = new FXMLLoader(getClass().getResource("/scratch.fxml"));
+            Parent root = resourceLoader.load();
+            resourceLoader.getController();
+            primaryStage.setTitle("Wikipedia Revision Loader:");
             primaryStage.setScene(new Scene(root, 800, 600));
             primaryStage.show();
 
